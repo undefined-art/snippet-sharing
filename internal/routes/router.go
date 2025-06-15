@@ -2,6 +2,7 @@ package routes
 
 import (
 	"gin-rest/internal/controllers"
+	"gin-rest/internal/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,8 @@ func NewRouter() *gin.Engine {
 	health := new(controllers.HealthController)
 
 	router.GET("/health", health.Status)
+
+	router.Use(middlewares.SecurityMiddleware([]string{"localhost:8080"}, true))
 	// router.Use(middlewares.AuthMiddleware())
 
 	v1 := router.Group("v1")

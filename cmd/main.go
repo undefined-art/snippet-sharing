@@ -29,6 +29,7 @@ func main() {
 func Init() {
 	config := config.GetConfig()
 	r := routes.NewRouter()
+
 	config.GetString("server.address")
 	r.Run()
 }
