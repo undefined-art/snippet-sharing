@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"gin-rest/config"
 	"net/http"
+	"snippet-sharing/config"
 	"strings"
 
 	"github.com/gin-gonic/gin"

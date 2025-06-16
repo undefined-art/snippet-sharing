@@ -1,28 +1,26 @@
-BINARY_NAME=gin-rest
+APP_NAME=snippet-sharing
+IMAGE_NAME=snippet-sharing-image
+CONTAINER_NAME=snippet-sharing-container
+PORT=8080
+
+.PHONY: build run clean docker-build docker-run docker-clean
 
 build:
-	@echo "Building binary..."
-	go build -o $(BINARY_NAME) ./cmd
+	go mod tidy
+	go build -ldflags="-w -s" -o $(APP_NAME) ./cmd/main.go
 
 run: build
-	@echo "Running app..."
-	./$(BINARY_NAME)
-
-test:
-	@echo "Running tests..."
-	go test ./...
+	./$(APP_NAME)
 
 clean:
-	@echo "Cleaning..."
-	go clean
-	rm -f $(BINARY_NAME)
+	rm -f $(APP_NAME)
 
-fmt:
-	@echo "Formatting code..."
-	go fmt ./...
+docker-build:
+	docker build -t $(IMAGE_NAME) .
 
-lint:
-	@echo "Linting code..."
-	golangci-lint run
+docker-run:
+	docker run --rm -it -p $(PORT):$(PORT) -v $(PWD)/data:/app/data --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
-.PHONY: build run test clean fmt lint
+docker-clean:
+	docker rm -f $(CONTAINER_NAME) || true
+	docker rmi $(IMAGE_NAME) || true

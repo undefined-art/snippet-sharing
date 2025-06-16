@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"gin-rest/config"
-	"gin-rest/internal/routes"
+	"snippet-sharing/config"
+	"snippet-sharing/internal/routes"
 
 	"os"
 )

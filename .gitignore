@@ -3,4 +3,5 @@ config/production.yaml
 build/
 Godeps/
 !Godeps/Godeps.json
-gin-rest
+snippet-sharing
+data

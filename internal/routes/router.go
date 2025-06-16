@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"gin-rest/internal/controllers"
-	"gin-rest/internal/middlewares"
+	"snippet-sharing/internal/controllers"
+	"snippet-sharing/internal/middlewares"
 
 	"github.com/gin-gonic/gin"
 )

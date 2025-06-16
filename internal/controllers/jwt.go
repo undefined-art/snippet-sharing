@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"gin-rest/config"
 	"net/http"
+	"snippet-sharing/config"
 	"time"
 
 	"github.com/gin-gonic/gin"
