@@ -2,4 +2,7 @@ server:
   address: "localhost:8080"
 http:
   auth:
-    secret: "test"
+    secret: ""
+security:
+  whitelisted_hosts: []
+  ssl_redirects: false

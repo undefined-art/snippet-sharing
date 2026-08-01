@@ -1,0 +1,10 @@
+server:
+  address: "localhost:8080"
+http:
+  auth:
+    secret: "dev-secret-change-in-production"
+security:
+  whitelisted_hosts:
+    - "localhost:8080"
+    - "127.0.0.1:8080"
+  ssl_redirects: false

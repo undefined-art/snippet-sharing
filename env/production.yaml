@@ -1,0 +1,8 @@
+server:
+  address: "0.0.0.0:8080"
+http:
+  auth:
+    secret: ""
+security:
+  whitelisted_hosts: []
+  ssl_redirects: true

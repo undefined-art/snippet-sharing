@@ -3,30 +3,23 @@ package middlewares
 import (
 	"net/http"
 	"snippet-sharing/config"
+	"snippet-sharing/internal/types"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type Claims struct {
-	Username string `json:"username"`
-	jwt.RegisteredClaims
-}
-
 func AuthMiddleware() gin.HandlerFunc {
-
 	return func(c *gin.Context) {
-		config := config.GetConfig()
-
-		jwtSecret := config.GetString("http.auth.secret")
+		cfg := config.GetConfig()
+		jwtSecret := cfg.GetString("http.auth.secret")
 
 		authHeader := c.GetHeader("Authorization")
 
 		if authHeader == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header required"})
 			c.Abort()
-
 			return
 		}
 
@@ -38,8 +31,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-			return jwtSecret, nil
+		token, err := jwt.ParseWithClaims(tokenString, &types.Claims{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtSecret), nil
 		})
 
 		if err != nil || !token.Valid {
@@ -48,7 +41,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		claims, ok := token.Claims.(*Claims)
+		claims, ok := token.Claims.(*types.Claims)
 
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})

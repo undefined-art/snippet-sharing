@@ -2,21 +2,36 @@ package config
 
 import (
 	"log"
+	"sync"
 
 	"github.com/spf13/viper"
 )
 
-var config *viper.Viper
+var (
+	cfg  *viper.Viper
+	mu   sync.RWMutex
+	initOnce sync.Once
+	initErr error
+)
 
 func Init(env string) {
-	config = viper.New()
+	initOnce.Do(func() {
+		initErr = initConfig(env)
+	})
+	if initErr != nil {
+		log.Fatalf("Config initialization failed: %v", initErr)
+	}
+}
 
-	config.SetConfigName("default")
-	config.SetConfigType("yaml")
-	config.AddConfigPath("env/")
+func initConfig(env string) error {
+	v := viper.New()
 
-	if err := config.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading default config file: %v", err)
+	v.SetConfigName("default")
+	v.SetConfigType("yaml")
+	v.AddConfigPath("env/")
+
+	if err := v.ReadInConfig(); err != nil {
+		return err
 	}
 
 	envConfig := viper.New()
@@ -25,18 +40,27 @@ func Init(env string) {
 	envConfig.AddConfigPath("env/")
 
 	if err := envConfig.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading %s config file: %v", env, err)
+		return err
 	}
 
-	if err := config.MergeConfigMap(envConfig.AllSettings()); err != nil {
-		log.Fatalf("Error merging %s config: %v", env, err)
+	if err := v.MergeConfigMap(envConfig.AllSettings()); err != nil {
+		return err
 	}
+
+	mu.Lock()
+	cfg = v
+	mu.Unlock()
+
+	return nil
 }
 
 func GetConfig() *viper.Viper {
-	if config == nil {
-		log.Fatal("Config not initialized")
+	mu.RLock()
+	defer mu.RUnlock()
+
+	if cfg == nil {
+		log.Fatal("Config not initialized. Call config.Init() first.")
 	}
 
-	return config
+	return cfg
 }
