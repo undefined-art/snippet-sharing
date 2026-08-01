@@ -1,0 +1,13 @@
+# Snippet Sharing
+Copyright (c) 2026 undefined-art
+
+This product includes third-party software that is distributed under their
+respective licenses. Principal dependencies and their licenses:
+
+- Gin — MIT License (https://github.com/gin-gonic/gin)
+- Go standard library — BSD-3-Clause License (https://go.dev)
+- JWT (golang-jwt) — MIT License (https://github.com/golang-jwt/jwt)
+- Viper (config) — MIT License (https://github.com/spf13/viper)
+
+For the complete and authoritative license texts, refer to `go.mod` and the
+individual module repositories.
